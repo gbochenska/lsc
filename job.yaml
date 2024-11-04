@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: copy-content-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: copy-content
+        image: busybox
+        command: ["/bin/sh", "-c", "echo '<h1>Hello from NFS</h1>' > /mnt/nfs/index.html"]
+        volumeMounts:
+        - name: nfs-storage
+          mountPath: /mnt/nfs
+      restartPolicy: Never
+      volumes:
+      - name: nfs-storage
+        persistentVolumeClaim:
+          claimName: nfs-pvc
